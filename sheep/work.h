@@ -38,7 +38,8 @@ struct worker_info {
 
 	pthread_mutex_t startup_lock;
 
-	pthread_t worker_thread; /* used for an ordered work queue */
+	size_t nr_threads;
+	pthread_t worker_thread[0];
 };
 
 extern struct list_head worker_info_list;

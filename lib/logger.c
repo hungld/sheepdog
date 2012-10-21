@@ -156,7 +156,7 @@ static notrace int log_vsnprintf(char *buff, size_t size, int prio,
 {
 	char *p = buff;
 
-	if (worker_name && worker_idx)
+	if (worker_name && worker_idx >= 0)
 		snprintf(p, size, "[%s %d] ", worker_name, worker_idx);
 	else if (worker_name)
 		snprintf(p, size, "[%s] ", worker_name);
@@ -466,7 +466,7 @@ notrace void set_thread_name(const char *name, int idx)
 
 notrace void get_thread_name(char *name)
 {
-	if (worker_name && worker_idx)
+	if (worker_name && worker_idx >= 0)
 		sprintf(name, "%s %d", worker_name, worker_idx);
 	else if (worker_name)
 		sprintf(name, "%s", worker_name);
