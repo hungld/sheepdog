@@ -146,6 +146,15 @@ static void *worker_routine(void *arg)
 	while (!(wi->q.wq_state & WQ_DEAD)) {
 
 		pthread_mutex_lock(&wi->pending_lock);
+		if (!wi->ordered && idx == wi->nr_threads - 1 &&
+		    NR_MIN_WORKER_THREADS < wi->nr_threads &&
+		    wi->nr_pending + wi->nr_running <= idx / 2) {
+			wi->nr_threads--;
+			pthread_mutex_unlock(&wi->pending_lock);
+			pthread_detach(pthread_self());
+			dprintf("destroy thread %s %d\n", wi->name, idx);
+			break;
+		}
 retest:
 		if (list_empty(&wi->q.pending_list)) {
 			wi->nr_running--;
