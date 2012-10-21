@@ -35,6 +35,8 @@ struct worker_info {
 	pthread_mutex_t pending_lock;
 	/* protected by pending_lock */
 	struct work_queue q;
+	size_t nr_pending;
+	size_t nr_running;
 
 	pthread_mutex_t startup_lock;
 
