@@ -139,7 +139,8 @@ int default_write(uint64_t oid, const struct siocb *iocb)
 	}
 
 	get_obj_path(oid, path);
-	if (iocb->flags & SD_FLAG_CMD_CACHE && is_disk_cache_enabled())
+	if (iocb->flags & SD_FLAG_CMD_CACHE && is_disk_cache_enabled() &&
+	    flags & O_DIRECT)
 		flags &= ~O_DSYNC;
 	fd = open(path, flags, def_fmode);
 	if (fd < 0)
@@ -302,7 +303,8 @@ int default_create_and_write(uint64_t oid, const struct siocb *iocb)
 	get_obj_path(oid, path);
 	get_tmp_obj_path(oid, tmp_path);
 
-	if (iocb->flags & SD_FLAG_CMD_CACHE && is_disk_cache_enabled())
+	if (iocb->flags & SD_FLAG_CMD_CACHE && is_disk_cache_enabled() &&
+	    flags & O_DIRECT)
 		flags &= ~O_DSYNC;
 
 	fd = open(tmp_path, flags, def_fmode);
